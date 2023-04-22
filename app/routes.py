@@ -28,3 +28,23 @@ def get_list_of_planets():
             size=planet.size
         ))
     return jsonify(results)
+
+
+planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
+@planets_bp.route("/<planet_id>", methods=["GET"])
+def get_planet(planet_id):
+    try:
+        planet_id=int(planet_id)
+    except:
+        return {"message": f"planet {planet_id} invalid"}, 400
+    for planet in planets:
+        if planet.id == planet_id:
+            return dict(
+                id=planet.id,
+                name=planet.name,
+                description=planet.description,
+                size=planet.size
+            )
+        
+    return {"message": f"planet {planet_id} not found"}, 404
+
