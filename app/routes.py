@@ -1,12 +1,19 @@
 from flask import Blueprint, jsonify, abort, make_response
 
-
 class Planet:
     def __init__(self, id, name, description, size):
         self.id = id
         self.name = name
         self.description = description
         self.size = size
+
+    def create_dict(self):
+        return dict(
+            id=self.id,
+            name=self.name,
+            description=self.description,
+            size=self.size
+        )
 
 planets = [
     Planet(1, "Earth", "habitable", "12742km in diameter"),
@@ -18,29 +25,6 @@ planets = [
 ]
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
-@planets_bp.route("", methods=["GET"])
-def get_list_of_planets():
-    results =[]
-    for planet in planets:
-        results.append(dict(
-            id=planet.id,
-            name=planet.name,
-            description=planet.description,
-            size=planet.size
-        ))
-    return jsonify(results)
-
-planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
-@planets_bp.route("/<planet_id>", methods=["GET"])
-def get_planet(planet_id):
-        planet = validate_planet(planet_id)
-        return dict(
-            id=planet.id,
-            name=planet.name,
-            description=planet.description,
-            size=planet.size
-        )
-
 
 def validate_planet(planet_id):
     try:
@@ -53,4 +37,20 @@ def validate_planet(planet_id):
             return planet
     
     abort(make_response({"message": f"planet {planet_id} not found"}, 404))
+
+
+@planets_bp.route("", methods=["GET"])
+def get_list_of_planets():
+    results =[]
+    for planet in planets:
+        results.append(planet.create_dict())
+    return jsonify(results)
+
+@planets_bp.route("/<planet_id>", methods=["GET"])
+def get_planet(planet_id):
+        planet = validate_planet(planet_id)
+        return planet.create_dict()
+
+
+
     
