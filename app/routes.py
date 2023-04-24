@@ -31,11 +31,11 @@ def validate_planet(planet_id):
         planet_id=int(planet_id)
     except:
         abort(make_response({"message": f"planet {planet_id} invalid"}, 400))
-    
+
     for planet in planets:
         if planet.id == planet_id:
             return planet
-    
+
     abort(make_response({"message": f"planet {planet_id} not found"}, 404))
 
 
