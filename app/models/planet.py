@@ -1,9 +1,6 @@
 from app import db
 
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 class Planet(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=False)
