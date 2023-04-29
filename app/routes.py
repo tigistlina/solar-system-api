@@ -17,7 +17,6 @@ def handle_planet():
             nickname =request_body["name"],
     )
 
-
     db.session.add(new_planet)
     db.session.commit()
 
