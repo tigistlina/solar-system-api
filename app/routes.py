@@ -8,7 +8,7 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 def handle_planet():
     request_body = request.get_json()
     new_planet = Planet(
-            name=request_body["name"]
+            name=request_body["name"],
             description=request_body["description"],
             size=request_body["size"],
             parent_planet =request_body["parent_planet"],
@@ -22,6 +22,12 @@ def handle_planet():
     db.session.commit()
 
     return make_response(f"Planet {new_planet.name} successfully created", 201)
+
+
+
+
+
+
 
 
 
