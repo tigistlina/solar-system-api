@@ -11,7 +11,7 @@ def handle_planet():
             name=request_body["name"],
             description=request_body["description"],
             size=request_body["size"],
-            parent_planet =request_body["parent_planet"],
+            moon_of_planet =request_body["moon_of_planet"],
             habitable =request_body["habitable"],
             gravity =request_body["gravity"],
             nickname =request_body["name"],
@@ -32,8 +32,8 @@ def get_all_planets():
                 id =planet.id,
                 name=planet.name,
                 description=planet.description,
-                size=planet.size, 
-                parent_planet =planet.parent_planet,
+                size=planet.size,
+                moon_of_planet =planet.moon_of_planet,
                 habitable =planet.habitable,
                 gravity =planet.gravity,
                 nickname =planet.nickname
@@ -41,4 +41,3 @@ def get_all_planets():
         )
 
     return jsonify(results)
-
