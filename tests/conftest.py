@@ -26,16 +26,36 @@ def client(app):
     return app.test_client()
 
 @pytest.fixture
-def one_planet(app):
-    planet = Planet(
+def multiple_planets(app):
+    planet_1 = Planet(
         description="A dusty, cold, desert world with a very thin atmosphere",
         gravity="3.721 m/s²",
         habitable=False,
+        id=1,
         moon_of_planet="Phobos & Deimos",
         name="Mars",
         nickname="Mars",
         size="6,792 km"
     )
-    db.session.add(planet)
+    planet_2= Planet(
+        name="Saturn",
+        description="The second-largest planet in solar system.",
+        size="36,183.7 miles",
+        moon_of_planet="Iapetus, Rhea, Dione, and Tethys",
+        habitable=False,
+        id=2,
+        gravity="10.44 m/s²",
+        nickname="Ringed Planet"
+    )
+    planet_3 = Planet(
+        name="Neptune",
+        description="Dark, cold, and whipped by supersonic winds, ice giant.",
+        size="24,622 km",
+        moon_of_planet="Triton",
+        habitable=False,
+        id=3,
+        gravity="11.15 m/s²",
+        nickname="Ice Giant"
+    )
+    db.session.add_all([planet_1, planet_2, planet_3])
     db.session.commit()
-    return planet
