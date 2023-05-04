@@ -31,7 +31,6 @@ def one_planet(app):
         description="A dusty, cold, desert world with a very thin atmosphere",
         gravity="3.721 m/s²",
         habitable=False,
-        id=7,
         moon_of_planet="Phobos & Deimos",
         name="Mars",
         nickname="Mars",
@@ -39,4 +38,4 @@ def one_planet(app):
     )
     db.session.add(planet)
     db.session.commit()
-    return Planet
+    return planet
