@@ -4,75 +4,50 @@ from flask import Blueprint, jsonify, make_response, request , abort
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
-def validate_planet(planet_id):
+def validate_model(cls, model_id):
     try:
-        planet_id = int(planet_id)
+        model_id = int(model_id)
     except:
-        abort(make_response({"message": f"Planet {planet_id} invalid"}, 400))
+        message = f"{cls.__name__} {model_id} is invalid"
+        abort(make_response({"message": message}, 400))
 
-    planet = Planet.query.get(planet_id)
+    model = cls.query.get(model_id)
 
-    if not planet:
-        abort(make_response({"message": f"Planet {planet_id} not found"}, 404))
+    if not model:
+        message = f"{cls.__name__} {model_id} not found"
+        abort(make_response({"message": message}, 404))
 
-    return planet
+    return model
 
 @planets_bp.route("", methods=["POST"])
-def handle_planet():
+def create_planet():
     request_body = request.get_json()
-    new_planet = Planet(
-            name=request_body["name"],
-            description=request_body["description"],
-            size=request_body["size"],
-            moon_of_planet =request_body["moon_of_planet"],
-            habitable =request_body["habitable"],
-            gravity =request_body["gravity"],
-            nickname =request_body["name"],
-    )
+    try:
+        new_planet = Planet.from_dict(request_body)
+        db.session.add(new_planet)
+        db.session.commit()
 
-    db.session.add(new_planet)
-    db.session.commit()
-
-    return make_response(jsonify(f"Planet {new_planet.name} successfully created"), 201)
+        message = f"Planet {new_planet.name} successfully created"
+        return make_response(message, 201)
+    
+    except KeyError as e:
+        abort(make_response({"message": f"missing required value: {e}"}, 400))
 
 @planets_bp.route("", methods=["GET"])
 def get_all_planets():
     planets = Planet.query.all()
-    results = []
-    for planet in planets:
-        results.append(
-            dict(
-                id =planet.id,
-                name=planet.name,
-                description=planet.description,
-                size=planet.size,
-                moon_of_planet =planet.moon_of_planet,
-                habitable =planet.habitable,
-                gravity =planet.gravity,
-                nickname =planet.nickname
-            )
-        )
+    results= [planet.to_dict()for planet in planets]
 
     return jsonify(results)
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def get_one_planet(planet_id):
-    planet = validate_planet(planet_id)
-    return {
+    planet = validate_model(Planet, planet_id)
+    return planet.to_dict()
 
-            "id" : planet.id,
-            "name" :planet.name,
-            "description" : planet.description,
-            "size" : planet.size,
-            "moon_of_planet" : planet.moon_of_planet,
-            "habitable" : planet.habitable,
-            "gravity" :planet.gravity,
-            "nickname" : planet.nickname
-
-            }
 @planets_bp.route("/<planet_id>", methods=["PUT"])
 def update_planet(planet_id):
-    planet_to_update= validate_planet(planet_id)
+    planet_to_update= validate_model(Planet, planet_id)
     planet_data= request.get_json()
 
     planet_to_update.name = planet_data["name"]
@@ -82,19 +57,16 @@ def update_planet(planet_id):
     planet_to_update.habitable = planet_data["habitable"]
     planet_to_update.gravity = planet_data["gravity"]
     planet_to_update.nickname = planet_data["nickname"]
-    
+
     db.session.commit()
 
     return make_response(jsonify(f"Planet { planet_to_update.name} updated"), 200)
 
 @planets_bp.route("/<planet_id>", methods=["DELETE"])
 def delete_planet(planet_id):
-    planet_to_delete = validate_planet(planet_id)
+    planet_to_delete = validate_model(Planet, planet_id)
 
     db.session.delete(planet_to_delete)
     db.session.commit()
 
     return make_response(jsonify(f"Planet {planet_to_delete.name} successfully deleted"), 200)
-
-
-

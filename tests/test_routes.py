@@ -101,5 +101,3 @@ def test_creates_one_planet(client):
     assert response.status_code == 201
     assert response_body == "Planet Venus successfully created"
 
-
-
