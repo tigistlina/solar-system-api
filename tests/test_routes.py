@@ -23,7 +23,7 @@ def test_get_one_planet_by_id(client, multiple_planets):
         "id": 1,
         "moon_of_planet": "Phobos & Deimos",
         "name": "Mars",
-        "nickname": "Mars",
+        "nickname": "Red Planet",
         "size": "6,792 km"
     }
 
@@ -59,7 +59,7 @@ def test_get_list_of_all_planets(client, multiple_planets):
         "id": 1,
         "moon_of_planet": "Phobos & Deimos",
         "name": "Mars",
-        "nickname": "Mars",
+        "nickname": "Red Planet",
         "size": "6,792 km"
     }, {
         "name": "Saturn",
@@ -100,4 +100,33 @@ def test_creates_one_planet(client):
     # Assert
     assert response.status_code == 201
     assert response_body == "Planet Venus successfully created"
+
+
+def test_replace_planet_returns_seeded_planet(client, multiple_planets):
+    replaced_planet = {
+    "name": "Earth",
+    "description": "A rocky, terrestrial planet.",
+    "size": "12,756 km",
+    "parent_planet": None,
+    "moon_of_planet": "The moon", 
+    "habitable": True,
+    "gravity": "9.807 m/s²",
+    "nickname": "Blue Planet, Gaia, Terra"
+}
+    response=client.put("/planets/1", json= replaced_planet) 
+    actual_planet = Planet.query.get(1) 
+    response_body = response.get_json()
+    assert response.status_code == 200
+    assert response_body == "Planet Earth updated"
+    assert actual_planet.name == replaced_planet["name"]
+
+def test_delete_planet(client, multiple_planets):
+    # Act
+    response = client.delete("/planets/1")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert response_body == "Planet Mars successfully deleted"
+
 

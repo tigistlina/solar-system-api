@@ -28,14 +28,23 @@ def create_planet():
         db.session.commit()
 
         message = f"Planet {new_planet.name} successfully created"
-        return make_response(message, 201)
+        return make_response(jsonify(message), 201)
     
     except KeyError as e:
         abort(make_response({"message": f"missing required value: {e}"}, 400))
 
 @planets_bp.route("", methods=["GET"])
 def get_all_planets():
+    name_query = request.args.get("name")
+    nickname_query = request.args.get("nickname")
+    if name_query:
+        planets = Planet.query.filter_by(name = name_query)
+
+    if nickname_query:
+        planets = Planet.query.filter_by(nickname = nickname_query)
+
     planets = Planet.query.all()
+
     results= [planet.to_dict()for planet in planets]
 
     return jsonify(results)

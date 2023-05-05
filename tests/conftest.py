@@ -34,7 +34,7 @@ def multiple_planets(app):
         id=1,
         moon_of_planet="Phobos & Deimos",
         name="Mars",
-        nickname="Mars",
+        nickname="Red Planet",
         size="6,792 km"
     )
     planet_2= Planet(
