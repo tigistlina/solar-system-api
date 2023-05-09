@@ -1,23 +1,10 @@
 from app import db
 from app.models.planet import Planet
 from flask import Blueprint, jsonify, make_response, request , abort
+from .helpers import validate_model
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
-def validate_model(cls, model_id):
-    try:
-        model_id = int(model_id)
-    except:
-        message = f"{cls.__name__} {model_id} is invalid"
-        abort(make_response({"message": message}, 400))
-
-    model = cls.query.get(model_id)
-
-    if not model:
-        message = f"{cls.__name__} {model_id} not found"
-        abort(make_response({"message": message}, 404))
-
-    return model
 
 @planets_bp.route("", methods=["POST"])
 def create_planet():
@@ -29,7 +16,7 @@ def create_planet():
 
         message = f"Planet {new_planet.name} successfully created"
         return make_response(jsonify(message), 201)
-    
+
     except KeyError as e:
         abort(make_response({"message": f"missing required value: {e}"}, 400))
 
