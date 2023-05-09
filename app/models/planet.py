@@ -8,8 +8,8 @@ class Planet(db.Model):
     habitable = db.Column(db.Boolean)
     gravity = db.Column(db.String)
     nickname = db.Column(db.String, nullable=True)
-    # moon_id = db.Column(db.Integer, db.ForeignKey("moon.id"))
-    # moon = db.relationship("Moon", back_populates="planets")
+    moon_id = db.Column(db.Integer, db.ForeignKey("moon.id"))
+    moon = db.relationship("Moon", back_populates="planets")
 
     def to_dict(self):
         return dict(
