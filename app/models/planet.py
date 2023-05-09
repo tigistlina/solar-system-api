@@ -16,11 +16,11 @@ class Planet(db.Model):
             name=self.name,
             description=self.description,
             size=self.size,
-            moon_of_planet=self.moon_of_planet,
             habitable=self.habitable,
             id=self.id,
             gravity=self.gravity,
-            nickname=self.nickname
+            nickname=self.nickname,
+            moon_id = self.moon_id
             )
 
     @classmethod
@@ -29,7 +29,6 @@ class Planet(db.Model):
             name = planet_data["name"],
             description = planet_data["description"],
             size = planet_data["size"],
-            moon_of_planet = planet_data["moon_of_planet"],
             habitable = planet_data["habitable"],
             gravity = planet_data["gravity"],
             nickname = planet_data["nickname"]

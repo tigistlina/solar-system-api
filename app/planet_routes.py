@@ -48,8 +48,6 @@ def update_planet(planet_id):
 
     planet_to_update.name = planet_data["name"]
     planet_to_update.description = planet_data["description"]
-    planet_to_update.size= planet_data["size"]
-    planet_to_update.moon_of_planet = planet_data["moon_of_planet"]
     planet_to_update.habitable = planet_data["habitable"]
     planet_to_update.gravity = planet_data["gravity"]
     planet_to_update.nickname = planet_data["nickname"]
